@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plastic, Inc. — quem fabrica o plástico do mundo</title>
+<meta name="description" content="O mundo produz 14 toneladas de plástico por segundo. 20 empresas respondem por mais da metade do lixo plástico descartável. Dados reais, em tempo real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* paleta "embalagem": branco leitoso de HDPE, azul PET, laranja de advertência */
+    --hdpe:#EFF1EF;
+    --hdpe-deep:#E3E7E4;
+    --ink:#15201F;
+    --pet:#155E8E;
+    --warn:#D14900;
+    --mute:#5C6A66;
+    --hairline:#C7CEC9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--hdpe);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    display:flex;flex-direction:column;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+  /* seções nunca encolhem: a página cresce e rola se precisar */
+  body > *{flex-shrink:0}
+  main{flex:1 0 auto}
+  /* ---------- topo ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    padding:1rem 1.5rem .9rem;
+    border-bottom:2px solid var(--ink);
+    flex-wrap:wrap;
+  }
+  h1{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(1.05rem,2.6vw,1.6rem);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-weight:400;
+  }
+  h1 .x{color:var(--warn)}
+  .head-right{
+    display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+    margin-left:auto;
+  }
+  .clock{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(.68rem,1.6vw,.85rem);
+    color:var(--mute);
+    white-space:nowrap;
+  }
+  .clock strong{color:var(--ink);font-weight:600}
+  .lang{
+    display:inline-flex;
+    border:1.5px solid var(--ink);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .lang button{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    padding:.38rem .8rem;
+    border:none;
+    background:transparent;
+    color:var(--mute);
+    cursor:pointer;
+    min-height:34px;
+  }
+  .lang button[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--hdpe);
+    font-weight:600;
+  }
+  .lang button:focus-visible{
+    outline:2px solid var(--pet);
+    outline-offset:-2px;
+  }
+
+  /* ---------- painel principal ---------- */
+  main{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .side{
+    padding:clamp(1.2rem,3.5vw,3rem);
+    display:flex;flex-direction:column;justify-content:center;gap:.9rem;
+    position:relative;
+  }
+  .side + .side{border-left:2px solid var(--ink)}
+
+  .tag{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--mute);
+  }
+  .tag::before{
+    content:"";width:.6rem;height:.6rem;border-radius:50%;
+    background:currentColor;flex:none;
+  }
+  .side.prod .tag{color:var(--warn)}
+  .side.degr .tag{color:var(--pet)}
+
+  .counter{
+    font-family:'IBM Plex Mono',monospace;
+    font-variant-numeric:tabular-nums;
+    font-weight:600;
+    font-size:clamp(2rem,5.4vw,4.2rem);
+    line-height:1.05;
+    word-break:break-all;
+  }
+  .side.prod .counter{color:var(--warn)}
+  .side.degr .counter{color:var(--pet)}
+  .unit{
+    font-family:'Anton',sans-serif;font-weight:400;
+    font-size:clamp(.85rem,1.8vw,1.2rem);
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink);
+  }
+  .note{
+    font-size:clamp(.8rem,1.5vw,.92rem);
+    color:var(--mute);max-width:36ch;line-height:1.5;
+  }
+  .note strong{color:var(--ink)}
+
+  .resin{
+    position:absolute;right:1rem;bottom:.6rem;
+    font-size:clamp(3rem,8vw,6rem);
+    color:var(--hdpe-deep);
+    user-select:none;pointer-events:none;
+    line-height:1;
+  }
+
+  /* ---------- assinatura: a garrafa de 450 anos ---------- */
+  .bottle{
+    border-top:2px solid var(--ink);
+    padding:1rem 1.5rem 1.1rem;
+  }
+  .bottle .label{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    font-size:.8rem;color:var(--mute);margin-bottom:.55rem;
+    line-height:1.5;
+  }
+  .bottle .label strong{color:var(--ink)}
+  .bar{
+    height:14px;border:1.5px solid var(--ink);border-radius:99px;
+    overflow:hidden;background:#fff;
+  }
+  .bar .fill{
+    height:100%;width:0%;
+    background:var(--pet);
+    min-width:1px;
+  }
+  .bottle .pct{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;
+    color:var(--pet);margin-top:.45rem;font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- rodapé de stats + fontes ---------- */
+  .strip{
+    display:grid;grid-template-columns:1fr 1fr;
+    border-top:2px solid var(--ink);
+  }
+  .stat{
+    padding:.9rem 1.5rem;
+    display:flex;flex-direction:column;gap:.15rem;
+    min-width:0;
+  }
+  .stat + .stat{border-left:1px solid var(--hairline)}
+  .stat .k{
+    font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--mute);
+    line-height:1.5;
+  }
+  .stat .v{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(1rem,2.4vw,1.4rem);
+    overflow-wrap:break-word;
+  }
+  .stat.rec .v{color:var(--pet)}
+  .stat.leak .v{color:var(--warn)}
+
+  /* ---------- quem fabrica isso ---------- */
+  .industry{
+    border-top:2px solid var(--ink);
+    background:var(--ink);
+    color:var(--hdpe);
+    padding:clamp(1.5rem,4vw,2.8rem) 1.5rem;
+    display:flex;flex-direction:column;gap:1.2rem;
+  }
+  .ind-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--warn);
+  }
+  .ind-headline{
+    font-family:'Anton',sans-serif;font-weight:400;
+    font-size:clamp(1.4rem,3.6vw,2.4rem);
+    line-height:1.2;letter-spacing:.02em;
+    max-width:28ch;text-transform:uppercase;
+  }
+  .ind-headline .big{color:var(--warn);font-weight:400}
+  .ind-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+    border-top:1px solid rgba(239,241,239,.25);
+    padding-top:1.2rem;
+  }
+  .ind-fact{display:flex;flex-direction:column;gap:.3rem}
+  .ind-num{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;
+    font-size:clamp(1.4rem,3vw,2rem);color:var(--warn);
+    font-variant-numeric:tabular-nums;
+  }
+  .ind-desc{font-size:.84rem;line-height:1.55;color:rgba(239,241,239,.8)}
+  .ind-foot{
+    font-size:.8rem;line-height:1.6;color:rgba(239,241,239,.6);
+    max-width:72ch;
+    border-top:1px solid rgba(239,241,239,.25);
+    padding-top:1rem;
+  }
+
+  footer{
+    border-top:1px solid var(--hairline);
+    padding:.7rem 1.5rem 1rem;
+    font-size:.7rem;color:var(--mute);line-height:1.6;
+  }
+
+  /* ---------- mobile ---------- */
+  @media (max-width:680px){
+    header{
+      padding:.85rem 1rem .8rem;
+      gap:.6rem;
+    }
+    .head-right{
+      width:100%;
+      justify-content:space-between;
+      margin-left:0;
+    }
+    main{grid-template-columns:1fr}
+    .side + .side{border-left:none;border-top:2px solid var(--ink)}
+    .side{padding:1.4rem 1rem;justify-content:flex-start;gap:.7rem}
+    .counter{font-size:clamp(2.1rem,11vw,2.8rem)}
+    .note{max-width:none}
+    .resin{font-size:2.6rem;bottom:.4rem;right:.7rem}
+    .bottle{padding:.9rem 1rem 1rem}
+    .strip{grid-template-columns:1fr}
+    .stat{padding:.8rem 1rem}
+    .stat + .stat{border-left:none;border-top:1px solid var(--hairline)}
+    .industry{padding:1.4rem 1rem}
+    .ind-grid{grid-template-columns:1fr;gap:1.1rem}
+    footer{padding:.7rem 1rem 1rem}
+  }
+  @media (max-width:380px){
+    .clock{font-size:.62rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="t-title">Plastic<span class="x">,&nbsp;Inc.</span></h1>
+  <div class="head-right">
+    <div class="clock"><span id="t-since">desde que você abriu esta página:</span> <strong id="elapsed">00:00:00</strong></div>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" id="btn-pt" aria-pressed="true">PT</button>
+      <button type="button" id="btn-en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- PRODUZIDO -->
+  <section class="side prod" aria-label="Plástico produzido">
+    <span class="tag" id="t-prodTag">Produzido no mundo</span>
+    <div class="counter" id="produced" aria-live="off">0</div>
+    <span class="unit" id="t-unit1">quilogramas</span>
+    <p class="note" id="t-prodNote">O mundo produz <strong>≈ 14 toneladas de plástico por segundo</strong> — cerca de 440 milhões de toneladas por ano.</p>
+    <span class="resin" aria-hidden="true">&#9843;</span>
+  </section>
+
+  <!-- DEGRADADO -->
+  <section class="side degr" aria-label="Plástico degradado">
+    <span class="tag" id="t-degrTag">Degradado naturalmente</span>
+    <div class="counter" id="degraded" aria-live="off">≈ 0</div>
+    <span class="unit" id="t-unit2">quilogramas</span>
+    <p class="note" id="t-degrNote">Plástico convencional leva <strong>de 100 a mais de 500 anos</strong> para se decompor. Na escala desta página, o número real é praticamente zero.</p>
+    <span class="resin" aria-hidden="true">&#9851;</span>
+  </section>
+</main>
+
+<!-- assinatura: a garrafa que você jogou fora agora -->
+<section class="bottle" aria-label="Degradação de uma garrafa PET">
+  <div class="label">
+    <span id="t-bottleText">Uma garrafa PET descartada <strong>no momento em que você abriu esta página</strong> terminará de se degradar por volta de <strong id="doneYear">2476</strong>.</span>
+    <span id="t-bottleEst">estimativa: ~450 anos</span>
+  </div>
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bottleBar">
+    <div class="fill" id="bottleFill"></div>
+  </div>
+  <div class="pct" id="bottlePct">0,000000000&nbsp;% concluído</div>
+</section>
+
+<div class="strip">
+  <div class="stat rec">
+    <span class="k" id="t-recK">Reciclado (≈ 9% do resíduo)</span>
+    <span class="v"><span id="recycled">0</span> kg</span>
+  </div>
+  <div class="stat leak">
+    <span class="k" id="t-leakK">Vazado para o ambiente</span>
+    <span class="v"><span id="leaked">0</span> kg</span>
+  </div>
+</div>
+
+<!-- quem fabrica isso: a indústria -->
+<section class="industry" aria-label="Quem fabrica o plástico">
+  <span class="ind-eyebrow" id="t-indEyebrow">Quem fabrica isso?</span>
+  <p class="ind-headline" id="t-indHeadline"><strong class="big">20 empresas</strong> produzem mais da metade de todo o plástico descartável que vira lixo no mundo.</p>
+  <div class="ind-grid">
+    <div class="ind-fact">
+      <span class="ind-num">5,9&nbsp;Mt</span>
+      <span class="ind-desc" id="t-indF1">de lixo plástico descartável por ano vêm de uma única empresa: a ExxonMobil — seguida por Dow e Sinopec.</span>
+    </div>
+    <div class="ind-fact">
+      <span class="ind-num">90%</span>
+      <span class="ind-desc" id="t-indF2">de toda a produção mundial de plástico descartável sai de apenas 100 empresas.</span>
+    </div>
+    <div class="ind-fact">
+      <span class="ind-num">20</span>
+      <span class="ind-desc" id="t-indF3">bancos globais concentram quase 60% do financiamento dessa indústria.</span>
+    </div>
+  </div>
+  <p class="ind-foot" id="t-indFoot">Enquanto isso, a narrativa de que a responsabilidade é do consumidor que "não recicla direito" convive com uma realidade em que só 10–15% do plástico descartável é reciclado por ano.</p>
+</section>
+
+<footer id="t-footer">
+  Estimativas extrapoladas de dados anuais — não são medições em tempo real.
+  Fontes: produção ~440 Mt/ano (PlasticsEurope, 2024); resíduo gerado ~225 Mt e ~72 Mt mal gerenciados (Earth Action, 2025); taxa de reciclagem &lt;10% (OECD); tempo de degradação do PET: estimativas de 100–500+ anos.
+</footer>
+
+<script>
+(function(){
+  // ---- taxas por segundo, derivadas de dados anuais ----
+  var SEC_YEAR = 31536000;
+  var PRODUCED_KG_S = 440e9 / SEC_YEAR;          // ~13.952 kg/s
+  var RECYCLED_KG_S = (225e9 * 0.09) / SEC_YEAR; // ~642 kg/s
+  var LEAKED_KG_S   = 72e9 / SEC_YEAR;           // ~2.283 kg/s
+  var BOTTLE_YEARS  = 450;
+
+  // ---- i18n ----
+  var i18n = {
+    pt: {
+      htmlLang: 'pt-BR',
+      numLocale: 'pt-BR',
+      docTitle: 'Plastic, Inc. — quem fabrica o plástico do mundo',
+      title: 'Plastic<span class="x">,&nbsp;Inc.</span>',
+      since: 'desde que você abriu esta página:',
+      prodTag: 'Produzido no mundo',
+      degrTag: 'Degradado naturalmente',
+      unit: 'quilogramas',
+      prodNote: 'O mundo produz <strong>≈ 14 toneladas de plástico por segundo</strong> — cerca de 440 milhões de toneladas por ano.',
+      degrNote: 'Plástico convencional leva <strong>de 100 a mais de 500 anos</strong> para se decompor. Na escala desta página, o número real é praticamente zero.',
+      degrZero: '≈ 0',
+      bottleText: 'Uma garrafa PET descartada <strong>no momento em que você abriu esta página</strong> terminará de se degradar por volta de <strong id="doneYear"></strong>.',
+      bottleEst: 'estimativa: ~450 anos',
+      pctDone: '% concluído',
+      recK: 'Reciclado (≈ 9% do resíduo)',
+      leakK: 'Vazado para o ambiente',
+      indEyebrow: 'Quem fabrica isso?',
+      indHeadline: '<strong class="big">20 empresas</strong> produzem mais da metade de todo o plástico descartável que vira lixo no mundo.',
+      indN1: '5,9\u00A0Mt', indF1: 'de lixo plástico descartável por ano vêm de uma única empresa: a ExxonMobil — seguida por Dow e Sinopec.',
+      indN2: '90%', indF2: 'de toda a produção mundial de plástico descartável sai de apenas 100 empresas.',
+      indN3: '20', indF3: 'bancos globais concentram quase 60% do financiamento dessa indústria.',
+      indFoot: 'Enquanto isso, a narrativa de que a responsabilidade é do consumidor que "não recicla direito" convive com uma realidade em que só 10–15% do plástico descartável é reciclado por ano.',
+      footer: 'Estimativas extrapoladas de dados anuais — não são medições em tempo real. Fontes: produção ~440 Mt/ano (PlasticsEurope, 2024); resíduo gerado ~225 Mt e ~72 Mt mal gerenciados (Earth Action, 2025); taxa de reciclagem <10% (OECD); dados da indústria: Plastic Waste Makers Index (Minderoo Foundation); tempo de degradação do PET: estimativas de 100–500+ anos.'
+    },
+    en: {
+      htmlLang: 'en',
+      numLocale: 'en-US',
+      docTitle: 'Plastic, Inc. — who makes the world\u2019s plastic',
+      title: 'Plastic<span class="x">,&nbsp;Inc.</span>',
+      since: 'since you opened this page:',
+      prodTag: 'Produced worldwide',
+      degrTag: 'Naturally degraded',
+      unit: 'kilograms',
+      prodNote: 'The world produces <strong>≈ 14 tonnes of plastic every second</strong> — around 440 million tonnes per year.',
+      degrNote: 'Conventional plastic takes <strong>100 to 500+ years</strong> to break down. At the scale of this page, the real number is practically zero.',
+      degrZero: '≈ 0',
+      bottleText: 'A PET bottle discarded <strong>the moment you opened this page</strong> will finish degrading around <strong id="doneYear"></strong>.',
+      bottleEst: 'estimate: ~450 years',
+      pctDone: '% complete',
+      recK: 'Recycled (≈ 9% of waste)',
+      leakK: 'Leaked into the environment',
+      indEyebrow: 'Who makes this?',
+      indHeadline: '<strong class="big">20 companies</strong> produce more than half of all the single-use plastic that becomes waste worldwide.',
+      indN1: '5.9\u00A0Mt', indF1: 'of single-use plastic waste per year comes from a single company: ExxonMobil — followed by Dow and Sinopec.',
+      indN2: '90%', indF2: 'of the world\u2019s single-use plastic production comes from just 100 companies.',
+      indN3: '20', indF3: 'global banks provide nearly 60% of the financing behind this industry.',
+      indFoot: 'Meanwhile, the narrative that the responsibility lies with consumers who "don\u2019t recycle properly" coexists with a reality in which only 10–15% of single-use plastic is recycled each year.',
+      footer: 'Estimates extrapolated from annual data — not real-time measurements. Sources: production ~440 Mt/year (PlasticsEurope, 2024); ~225 Mt of waste generated and ~72 Mt mismanaged (Earth Action, 2025); recycling rate <10% (OECD); industry data: Plastic Waste Makers Index (Minderoo Foundation); PET degradation time: estimates of 100–500+ years.'
+    }
+  };
+
+  var lang = 'pt';
+  try {
+    var saved = null; // sem localStorage: detecta pelo navegador a cada visita
+    var nav = (navigator.language || 'pt').toLowerCase();
+    lang = saved || (nav.indexOf('pt') === 0 ? 'pt' : 'en');
+  } catch(e) { lang = 'pt'; }
+
+  var fmt;
+  var doneYearValue = new Date().getFullYear() + BOTTLE_YEARS;
+
+  var els = {
+    produced: document.getElementById('produced'),
+    degraded: document.getElementById('degraded'),
+    recycled: document.getElementById('recycled'),
+    leaked:   document.getElementById('leaked'),
+    elapsed:  document.getElementById('elapsed'),
+    pct:      document.getElementById('bottlePct'),
+    fill:     document.getElementById('bottleFill'),
+    bar:      document.getElementById('bottleBar'),
+    btnPt:    document.getElementById('btn-pt'),
+    btnEn:    document.getElementById('btn-en')
+  };
+
+  function applyLang(l){
+    lang = l;
+    var t = i18n[l];
+    document.documentElement.lang = t.htmlLang;
+    document.title = t.docTitle;
+    fmt = new Intl.NumberFormat(t.numLocale, {maximumFractionDigits:0});
+
+    document.getElementById('t-title').innerHTML = t.title;
+    document.getElementById('t-since').textContent = t.since;
+    document.getElementById('t-prodTag').textContent = t.prodTag;
+    document.getElementById('t-degrTag').textContent = t.degrTag;
+    document.getElementById('t-unit1').textContent = t.unit;
+    document.getElementById('t-unit2').textContent = t.unit;
+    document.getElementById('t-prodNote').innerHTML = t.prodNote;
+    document.getElementById('t-degrNote').innerHTML = t.degrNote;
+    els.degraded.textContent = t.degrZero;
+    document.getElementById('t-bottleText').innerHTML = t.bottleText;
+    document.getElementById('doneYear').textContent = doneYearValue;
+    document.getElementById('t-bottleEst').textContent = t.bottleEst;
+    document.getElementById('t-recK').textContent = t.recK;
+    document.getElementById('t-leakK').textContent = t.leakK;
+    document.getElementById('t-indEyebrow').textContent = t.indEyebrow;
+    document.getElementById('t-indHeadline').innerHTML = t.indHeadline;
+    var nums = document.querySelectorAll('.ind-num');
+    nums[0].textContent = t.indN1;
+    nums[1].textContent = t.indN2;
+    nums[2].textContent = t.indN3;
+    document.getElementById('t-indF1').textContent = t.indF1;
+    document.getElementById('t-indF2').textContent = t.indF2;
+    document.getElementById('t-indF3').textContent = t.indF3;
+    document.getElementById('t-indFoot').textContent = t.indFoot;
+    document.getElementById('t-footer').textContent = t.footer;
+
+    els.btnPt.setAttribute('aria-pressed', l === 'pt' ? 'true' : 'false');
+    els.btnEn.setAttribute('aria-pressed', l === 'en' ? 'true' : 'false');
+  }
+
+  els.btnPt.addEventListener('click', function(){ applyLang('pt'); });
+  els.btnEn.addEventListener('click', function(){ applyLang('en'); });
+
+  applyLang(lang);
+
+  // ---- contadores ----
+  var t0 = performance.now();
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(now){
+    var s = (now - t0) / 1000;
+
+    els.produced.textContent = fmt.format(s * PRODUCED_KG_S);
+    els.recycled.textContent = fmt.format(s * RECYCLED_KG_S);
+    els.leaked.textContent   = fmt.format(s * LEAKED_KG_S);
+
+    var total = Math.floor(s);
+    els.elapsed.textContent = pad(Math.floor(total/3600)) + ':' + pad(Math.floor(total/60)%60) + ':' + pad(total%60);
+
+    var pct = (s / (BOTTLE_YEARS * SEC_YEAR)) * 100;
+    var dec = pct.toFixed(9);
+    if (lang === 'pt') dec = dec.replace('.', ',');
+    els.pct.textContent = dec + ' ' + i18n[lang].pctDone;
+    els.fill.style.width = Math.max(pct, 0.05) + '%';
+    els.bar.setAttribute('aria-valuenow', pct.toFixed(9));
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
